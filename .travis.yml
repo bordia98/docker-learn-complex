@@ -1,0 +1,29 @@
+sudo: required
+language: generic 
+
+services:
+  - docker
+
+before_install:
+  - docker build -t bordia98/docker-complex -f ./client/Dockerfile.dev ./client/. 
+
+script:
+  - docker run -e CI=true bordia98/docker-complex npm run test
+
+after_success:
+  - docker build -t bbordia/docker-complex-client  ./client
+  - docker build -t bbordia/docker-complex-server  ./server
+  - docker build -t bbordia/docker-complex-nginx  ./nginx
+  - docker build -t bbordia/docker-complex-worker  ./worker
+
+# deploy:
+#   provider: elasticbeanstalk # what you are using to deploy 
+#   region: "us-west-2" # regopm where Elasticbeanstalk is running
+#   app: "docker" # Create app name
+#   env: "Docker-env" # Created env name
+#   bucket_name: "elasticbeanstalk-us-west-2-306476627547" # Elastic bean stalk bucket name
+#   bucket_path: "docker" # This is the applicaiton name on elastic bean stalk
+#   on:
+#     branch: master # run only when code is pushed to master
+#   access_key_id: $AWS_ACCESS_KEY  # added in env variable in travis cli
+#   secret_access_key: $AWS_SECRET_KEY  # add in env variable in travis cli
