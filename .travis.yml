@@ -11,10 +11,18 @@ script:
   - docker run -e CI=true bordia98/docker-complex npm run test
 
 after_success:
-  - docker build -t bbordia/docker-complex-client  ./client
-  - docker build -t bbordia/docker-complex-server  ./server
-  - docker build -t bbordia/docker-complex-nginx  ./nginx
-  - docker build -t bbordia/docker-complex-worker  ./worker
+  - docker build -t bordia98/docker-complex-client  ./client
+  - docker build -t bordia98/docker-complex-server  ./server
+  - docker build -t bordia98/docker-complex-nginx  ./nginx
+  - docker build -t bordia98/docker-complex-worker  ./worker
+  # login to docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # pushing images to docker
+  - docker push bordia98/docker-complex-client
+  - docker push bordia98/docker-complex-server
+  - docker push bordia98/docker-complex-nginx
+  - docker push bordia98/docker-complex-worker
+
 
 # deploy:
 #   provider: elasticbeanstalk # what you are using to deploy 
